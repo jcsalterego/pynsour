@@ -1,11 +1,10 @@
-"""Bootstrap file
-"""
+"""Pynsour Bootstrap"""
 
 import sys
-from app import *
+from src import *
 
 def main(argv):
-    pynsour = Pynsour('conf/bot.yaml')
+    pynsour = Pynsour('config/bot.yaml')
     return pynsour.run()
 
 if __name__ == "__main__":

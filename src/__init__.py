@@ -1,4 +1,6 @@
+"""Pynsour Initialization"""
 
+from config import Config
 import bot
 import os.path
 import sys
@@ -9,11 +11,15 @@ class Pynsour:
         if not os.path.exists(config_file):
             # this should throw an exception
             # but let's just be messy for the time being
-            print("Config file does not exist!")
+            print("Config file '%s' does not exist!" % config_file)
             sys.exit(1)
         
         # otherwise, load the configuration
-        self.config = Config()
-        print self.config.read(config_file)
+        self.bot = bot.Bot()
+        conf = Config(config_file)
+        conf.push(self.bot)
+        
+    def run(self):
+        self.bot.run()
             
 all = ['config', 'bot']
