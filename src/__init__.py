@@ -1,6 +1,7 @@
 """Pynsour Initialization"""
 
 from config import Config
+from events import Events
 import bot
 import os.path
 import sys
@@ -18,8 +19,10 @@ class Pynsour:
         self.bot = bot.Bot()
         conf = Config(config_file)
         conf.push(self.bot)
+
+        self.events = Events(self.bot)
         
     def run(self):
-        self.bot.run()
+        self.events.run()
             
 all = ['config', 'bot']

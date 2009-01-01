@@ -31,5 +31,5 @@ class Bot:
                 info[attr] = i
         return info
 
-    def run(self):
-        pprint(self.asDict())
+    def event(self):
+        print ""
