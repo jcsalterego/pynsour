@@ -13,6 +13,14 @@ class Parser:
         self.buffer_complete = True
 
     def append(self, incoming):
+        """Appends incoming data to buffer
+
+        Splits incoming by CRLF and keeps track of whether trailing
+        line is complete or otherwise. If the buffer is incomplete
+        to begin with, the first line of the incoming data is appended
+        to the last line of the existing data. Then, buffer completeness
+        is reevaluated based on incoming data.
+        """
         lines = incoming.split("\r\n")
 
         if self.buffer_complete:
@@ -30,6 +38,10 @@ class Parser:
         self.buffer_complete = (lines[-1] == "")
 
     def parse(self):
+        """Parses lines in buffer
+
+        Returns a list of op codes using the botcode module.
+        """
         ops = []
 
         if self.buffer_complete:
