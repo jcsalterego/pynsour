@@ -19,10 +19,10 @@ class Pynsour:
         self.bot = bot.Bot()
         conf = Config(config_file)
         conf.push(self.bot)
-
         self.events = Events(self.bot)
         
     def run(self):
+        self.bot.connect()
         self.events.run()
             
 all = ['config', 'bot']
