@@ -13,5 +13,3 @@ class Events:
                 self.bot.event()
             except KeyboardInterrupt, e:
                 raise e
-            except Exception, e:
-                raise e
