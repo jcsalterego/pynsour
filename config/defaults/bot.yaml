@@ -27,12 +27,16 @@ connections:
   nicks:
   - expybot1
   - expybot2
+  on_connect:
+  - join "#example"
 
 ##############################################################################
 # Handlers
 ##############################################################################
 
 # Channel paths are formed as: "example.org/#pynsour"
+# Script path uses dollar signs instead of backslashes
+#   as one would expect with
 handlers:
 - channel: "(.*)/#(.*)"
-  script: \2.py
+  script: "$1/$2.py"
