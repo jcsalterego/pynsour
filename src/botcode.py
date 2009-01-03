@@ -1,4 +1,4 @@
-
 OP_PONG = 1
-
-
+OP_JOIN = 2
+OP_PART = 3
+OP_PRIVMSG = 4
