@@ -17,11 +17,15 @@ STATE_ONLINE = 4
 class Bot:
 
     def __init__(self):
+        """Constructor
+        """
         self.__state = STATE_DISCONNECTED
         self.__load_defaults()
         self.parser = Parser()
 
     def __load_defaults(self):
+        """Loads default settings
+        """
         self.username = os.getlogin()
         self.password = None
         self.nicks = ["nick", "altnick"]
@@ -80,11 +84,15 @@ class Bot:
         self.execute(ops)
     
     def execute(self, operations):
+        """Execute botcode
+        """
         for operation in operations:
             if operation[0] == botcode.OP_PONG:
                 self.write("PONG :%s" % operation[1])
 
     def read(self):
+        """Reading from connection
+        """
         if self.__state > STATE_DISCONNECTED:
             incoming = self.__connection.recv(BUFFER_SIZE)
             self.parser.append(incoming)
@@ -94,6 +102,8 @@ class Bot:
             print incoming
 
     def write(self, outgoing):
+        """Writing to connection
+        """
         outgoing = "".join((outgoing, "\r\n"))
         write_bytes = len(outgoing)
         print "<<< Write %d bytes" % write_bytes
