@@ -70,15 +70,14 @@ class Bot:
         elif self.__state == STATE_CONNECTING:
             self.ops = self.on_connect
 
+            if self.password:
+                self.write("PASS %s" % self.password)
             self.write("NICK %s" % self.nicks[0])
             self.write("USER %s %s %s :%s" %
                        (self.username,
                         self.localhost,
                         self.hostname,
                         self.realname))
-
-            if self.password:
-                self.write("PASS %s" % self.password)
 
             self.__state = STATE_HANDSHAKE
         elif self.__state == STATE_HANDSHAKE:
