@@ -78,7 +78,7 @@ class Bot:
                         self.realname))
 
             if self.password:
-                self.write("PASSWORD %s" % self.password)
+                self.write("PASS %s" % self.password)
 
             self.__state = STATE_HANDSHAKE
         elif self.__state == STATE_HANDSHAKE:
