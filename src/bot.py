@@ -4,9 +4,10 @@ import os
 import socket
 
 from parser import Parser
+from logger import Logger
 import botcode
-import logger
 
+MAX_CONSOLE_LEN = 50
 BUFFER_SIZE = 1024
 STATE_DISCONNECTED = 0
 STATE_CONNECTING = 1
@@ -22,6 +23,7 @@ class Bot:
         self.__state = STATE_DISCONNECTED
         self.__load_defaults()
         self.parser = Parser()
+        self.logger = Logger()
 
     def __load_defaults(self):
         """Loads default settings
@@ -58,8 +60,8 @@ class Bot:
         self.__state = STATE_CONNECTING
         self.__connection = socket.socket(socket.AF_INET,
                                           socket.SOCK_STREAM)
-        print("### Connecting to %s:%s" %
-              (self.hostname, self.port))
+        self.logger.console("+++ Connecting to %s:%s" %
+                            (self.hostname, self.port))
         self.__connection.connect((self.hostname, self.port))
 
     def event(self):
@@ -115,14 +117,23 @@ class Bot:
             self.parser.append(incoming)
 
             read_bytes = len(incoming)
-            print ">>> Read %d bytes" % read_bytes
-            print incoming
+
+            first_line = incoming.split("\n")[0]
+            if len(first_line) > MAX_CONSOLE_LEN:
+                first_line = "%s..." % first_line[:MAX_CONSOLE_LEN]
+            self.logger.console(" IN [%4d] %s" % (read_bytes,
+                                                  first_line))
 
     def write(self, outgoing):
         """Writing to connection
         """
+        first_line = outgoing
+
         outgoing = "".join((outgoing, "\r\n"))
         write_bytes = len(outgoing)
-        print "<<< Write %d bytes" % write_bytes
-        print outgoing
+
+        if len(first_line) > MAX_CONSOLE_LEN:
+            first_line = "%s..." % first_line[:MAX_CONSOLE_LEN]
+        self.logger.console("OUT [%4d] %s" % (write_bytes,
+                                              first_line))
         self.__connection.send(outgoing)

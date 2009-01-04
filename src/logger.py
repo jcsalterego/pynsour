@@ -39,7 +39,7 @@ class ConsoleLogger:
     def write(self, data):
         """Write data"""
         timestamp = datetime.now().strftime('%Y%m%d.%H%M%S')
-        print "[%s] %s" % (timestamp, data)
+        print "%s %s" % (timestamp, data)
 
 class FileLogger:
 
@@ -53,4 +53,4 @@ class FileLogger:
     def write(self, data):
         """Write to file"""
         timestamp = datetime.now().strftime('%Y%m%d.%H%M%S')
-        self.file_.write("[%s] %s\n" % (timestamp, data))
+        self.file_.write("%s %s\n" % (timestamp, data))
