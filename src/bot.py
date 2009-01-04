@@ -1,6 +1,5 @@
 """Bot class"""
 
-from pprint import pprint
 import os
 import socket
 
