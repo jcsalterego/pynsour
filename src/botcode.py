@@ -1,4 +1,9 @@
-"""Bot Codes"""
+"""Bot Codes
+
+These are emitted by the parser to trigger certain actions; currently the
+values do not have any meaning and should not be used for comparison. In
+the future, these may hold formatting information (e.g. in a tuple.)
+"""
 
 OP_INVITE = "INVITE"
 OP_JOIN = "JOIN"
@@ -14,12 +19,19 @@ OP_PRIVMSG = "PRIVMSG"
 OP_QUIT = "QUIT"
 OP_TOPIC = "TOPIC"
 
-"""Bot events"""
+"""Bot events
+
+Events are added by the parser to trigger expansion into ore op codes;
+for example the OP_EVENT_CONNECT happens when RPL_WELCOME is sent by the
+server, triggering the on_connect configuration to execute (such as joining
+a channel.)
+"""
 OP_EVENT_CONNECT = "E:CONNECT"
 
 """Client Protocol Constants
 
-RFC 2812 http://www.faqs.org/rfcs/rfc2812.html"""
+RFC 2812: http://www.faqs.org/rfcs/rfc2812.html
+"""
 
 RPL_WELCOME = "001"
 RPL_YOURHOST = "002"
