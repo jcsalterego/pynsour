@@ -32,6 +32,8 @@ class Bot:
         self.realname = "Default pynsour user"
         self.handlers = []
         self.localhost = 'localhost'
+        self.on_connect = []
+        self.ops = []
 
     def asDict(self):
         """Return object as dictionary
@@ -66,6 +68,8 @@ class Bot:
         if self.__state == STATE_DISCONNECTED:
             return
         elif self.__state == STATE_CONNECTING:
+            self.ops = self.on_connect
+
             self.write("NICK %s" % self.nicks[0])
             self.write("USER %s %s %s :%s" %
                        (self.username,
@@ -80,15 +84,19 @@ class Bot:
         elif self.__state == STATE_HANDSHAKE:
             pass
         self.read()
-        ops = self.parser.parse()
-        self.execute(ops)
+        self.ops += self.parser.parse()
+        self.execute()
     
-    def execute(self, operations):
+    def execute(self):
         """Execute botcode
         """
-        for operation in operations:
+        for operation in self.ops:
             if operation[0] == botcode.OP_PONG:
                 self.write("PONG :%s" % operation[1])
+            elif operation[0] == botcode.OP_JOIN:
+                self.write("JOIN %s" % operation[1])
+
+        self.ops = []
 
     def read(self):
         """Reading from connection
