@@ -68,8 +68,6 @@ class Bot:
         if self.__state == STATE_DISCONNECTED:
             return
         elif self.__state == STATE_CONNECTING:
-            self.ops = self.on_connect
-
             if self.password:
                 self.write("PASS %s" % self.password)
             self.write("NICK %s" % self.nicks[0])
@@ -82,6 +80,7 @@ class Bot:
             self.__state = STATE_HANDSHAKE
         elif self.__state == STATE_HANDSHAKE:
             pass
+
         self.read()
         self.ops += self.parser.parse()
         self.execute()
@@ -89,7 +88,16 @@ class Bot:
     def execute(self):
         """Execute botcode
         """
-        for operation in self.ops:
+        ops = []
+
+        # Expand meta-ops, e.g. connect events
+        for operation in self.ops[:]:
+            if operation[0] == botcode.OP_EVENT_CONNECT:
+                ops += self.on_connect
+            else:
+                ops.append(operation)
+
+        for operation in ops:
             if operation[0] == botcode.OP_PONG:
                 self.write("PONG :%s" % operation[1])
             elif operation[0] == botcode.OP_JOIN:
