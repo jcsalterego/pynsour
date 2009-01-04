@@ -58,6 +58,8 @@ class Parser:
 
             if words[0] == "PING":
                 ops += (botcode.OP_PONG, words[1]),
+            elif len(words) > 2 and words[1] == botcode.RPL_WELCOME:
+                ops += (botcode.OP_EVENT_CONNECT),
             else:
                 # ignore
                 pass
