@@ -84,7 +84,7 @@ class Config:
             if words[0] == botcode.OP_JOIN:
                 if len(args) > 0:
                     ops += (botcode.OP_JOIN, args[0]),
-            elif words[0] == botcode.OPMODE:
+            elif words[0] == botcode.OP_MODE:
                 if len(args) > 0:
                     ops += (botcode.OP_MODE, args[0]),
 
