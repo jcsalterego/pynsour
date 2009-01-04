@@ -4,8 +4,9 @@ from pprint import pprint
 import os
 import socket
 
-import botcode
 from parser import Parser
+import botcode
+import logger
 
 BUFFER_SIZE = 1024
 STATE_DISCONNECTED = 0
