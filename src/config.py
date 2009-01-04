@@ -39,7 +39,8 @@ class Config:
                       "realname",
                       "username",
                       "nicks",
-                      "on_connect")
+                      "on_connect",
+                      "mode")
             for field in fields:
                 if field in conf['connections'][0]:
 
@@ -52,7 +53,7 @@ class Config:
                             and type(conf['connections'][0][field]) != list)):
                         continue
 
-                    if field == "on_connect":
+                    if field in ("on_connect", "mode"):
                         setattr(bot, field,
                                 self.process_ops(conf['connections'][0][field]))
                     else:
@@ -83,6 +84,9 @@ class Config:
             if words[0] == botcode.OP_JOIN:
                 if len(args) > 0:
                     ops += (botcode.OP_JOIN, args[0]),
+            elif words[0] == botcode.OPMODE:
+                if len(args) > 0:
+                    ops += (botcode.OP_MODE, args[0]),
 
         return ops
 

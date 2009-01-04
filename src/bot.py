@@ -94,6 +94,8 @@ class Bot:
                 self.write("PONG :%s" % operation[1])
             elif operation[0] == botcode.OP_JOIN:
                 self.write("JOIN %s" % operation[1])
+            elif operation[0] == botcode.OP_MODE:
+                self.write("MODE %s" % operation[1])
 
         self.ops = []
 

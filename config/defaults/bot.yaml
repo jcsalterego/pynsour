@@ -29,6 +29,7 @@ connections:
   - expybot2
   on_connect:
   - join "#example"
+  mode: +i
 
 ##############################################################################
 # Handlers
