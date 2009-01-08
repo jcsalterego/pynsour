@@ -1,11 +1,9 @@
-##############################################################################
-# Pynsour Sample Configuration File
-##############################################################################
+###
+### Pynsour Sample Configuration File
+###
 
-
-##############################################################################
-# Global Settings
-##############################################################################
+### Global Settings
+###
 
 name: pynsour
 version: 1
@@ -13,10 +11,8 @@ nicks:
  - pybot1
  - pybot2
 
-##############################################################################
-# Connections
-##############################################################################
-# pynsour conf version 1 only supports a single connection! agh!
+### Connections
+### - pynsour conf version 1 only supports a single connection! agh!
 
 connections:
 - name: example.org
@@ -31,9 +27,8 @@ connections:
   - join "#example"
   mode: +i
 
-##############################################################################
-# Handlers
-##############################################################################
+### Handlers
+###
 
 # Channel paths are formed as: "example.org/#pynsour"
 # Script path uses dollar signs instead of backslashes
