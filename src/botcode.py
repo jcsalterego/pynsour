@@ -5,6 +5,7 @@ values do not have any meaning and should not be used for comparison. In
 the future, these may hold formatting information (e.g. in a tuple.)
 """
 
+OP_ERROR = "*ERROR"
 OP_INVITE = "INVITE"
 OP_JOIN = "JOIN"
 OP_KICK = "KICK"
@@ -27,6 +28,8 @@ server, triggering the on_connect configuration to execute (such as joining
 a channel.)
 """
 OP_EVENT_CONNECT = "E:CONNECT"
+OP_EVENT_PRIVMSG = "E:PRIVMSG"
+OP_EVENT_SCRIPT = "E:SCRIPT"
 
 """Client Protocol Constants
 
