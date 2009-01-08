@@ -50,19 +50,29 @@ class Parser:
             buffer = self.buffer[:-1]
         
         for line in buffer:
-            if not line or line[0] == ":":
+            if not line:
                 continue
 
-            first, second = line.split(":", 1)
-            words = first.strip().split(" ") + [second]
+            recv_msg = False
+            if line[0] == ":":
+                line = line[1:]
+                recv_msg = True
 
-            if words[0] == "PING":
-                ops += (botcode.OP_PONG, words[1]),
-            elif len(words) > 2 and words[1] == botcode.RPL_WELCOME:
-                ops += (botcode.OP_EVENT_CONNECT),
+            words = line.split(":", 1)
+            if len(words) > 1:
+                first, second = words
+                words = first.strip().split(" ") + [second]
             else:
-                # ignore
-                pass
+                words = words[0].split(" ")
+
+            if recv_msg:
+                if words[1] == botcode.RPL_WELCOME:
+                    ops += (botcode.OP_EVENT_CONNECT,),
+                elif words[1] == "PRIVMSG":
+                    ops += (botcode.OP_EVENT_PRIVMSG, line,),
+            else:
+                if words[0] == "PING":
+                    ops += (botcode.OP_PONG, words[1]),
 
         if self.buffer_complete:
             self.buffer = []

@@ -5,6 +5,7 @@ import socket
 
 from parser import Parser
 from logger import Logger
+from sandbox import Sandbox
 import botcode
 
 MAX_CONSOLE_LEN = 50
@@ -24,6 +25,7 @@ class Bot:
         self.__load_defaults()
         self.parser = Parser()
         self.logger = Logger()
+        self.sandbox = Sandbox()
 
     def __load_defaults(self):
         """Loads default settings
@@ -36,6 +38,7 @@ class Bot:
         self.localhost = 'localhost'
         self.on_connect = []
         self.ops = []
+        self.name = ""
 
     def asDict(self):
         """Return object as dictionary
@@ -90,24 +93,66 @@ class Bot:
     def execute(self):
         """Execute botcode
         """
-        ops = []
-
         # Expand meta-ops, e.g. connect events
-        for operation in self.ops[:]:
+        new_ops = []
+        for operation in self.ops:
             if operation[0] == botcode.OP_EVENT_CONNECT:
-                ops += self.on_connect
+                new_ops += self.on_connect
+                self.__state = STATE_ONLINE
+            elif operation[0] == botcode.OP_EVENT_PRIVMSG:
+                sandbox_ops = self.filter_eval(operation[1])
+                if sandbox_ops:
+                    new_ops += self.sandbox.execute(sandbox_ops)
             else:
-                ops.append(operation)
+                new_ops.append(operation)
+        self.ops = new_ops
 
-        for operation in ops:
-            if operation[0] == botcode.OP_PONG:
-                self.write("PONG :%s" % operation[1])
-            elif operation[0] == botcode.OP_JOIN:
-                self.write("JOIN %s" % operation[1])
-            elif operation[0] == botcode.OP_MODE:
-                self.write("MODE %s" % operation[1])
+        while len(self.ops) > 0:
+            new_ops = []
+            for operation in self.ops:
+                if operation[0] == botcode.OP_PONG:
+                    self.write("PONG :%s" % operation[1])
+                elif operation[0] == botcode.OP_JOIN:
+                    self.write("JOIN %s" % operation[1])
+                elif operation[0] == botcode.OP_MODE:
+                    self.write("MODE %s" % operation[1])
+                elif operation[0] == botcode.OP_PRIVMSG:
+                    self.write("PRIVMSG %s :%s" % operation[1:3])
+            self.ops = new_ops
 
-        self.ops = []
+        # self.ops will be empty by here
+
+    def filter_eval(self, line):
+        """Filter based on channel
+        """
+        ops = []
+        words = line.split(":", 1)
+        if len(words) == 1:
+            return ops
+
+        args, msg = words
+        argv = args.split(" ")
+
+        if len(argv) < 4:
+            return ops
+
+        sender, action, recipient = argv[:3]
+
+        path = "%s/%s" % (self.name, recipient)
+
+        print self.asDict()
+        self.logger.console("F: %s %s" % (path, argv))
+        
+        for handler in self.handlers:
+            re = handler['channel_re']
+            if re.match(path):
+                script_path = re.sub(handler['script'].replace("$", "\\"),
+                                     path)
+                ops += (botcode.OP_EVENT_SCRIPT,
+                        script_path,
+                        (sender, action, recipient, msg)),
+
+        return ops
 
     def read(self):
         """Reading from connection
