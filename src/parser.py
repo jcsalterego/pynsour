@@ -1,6 +1,5 @@
 """Parser class"""
 
-from pprint import pprint
 import botcode
 
 class Parser:

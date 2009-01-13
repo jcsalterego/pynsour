@@ -2,7 +2,6 @@
 
 Read config file
 """
-from pprint import pprint
 import botcode
 import re
 import sys
@@ -66,8 +65,6 @@ class Config:
                     # precompile regex
                     handler['channel_re'] = re.compile(handler['channel'])
                     bot.handlers.append(handler)
-
-        # pprint(bot.asDict())
 
     @staticmethod
     def process_ops(instructions):
