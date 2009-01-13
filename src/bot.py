@@ -113,7 +113,10 @@ class Bot:
                 if operation[0] == botcode.OP_PONG:
                     self.write("PONG :%s" % operation[1])
                 elif operation[0] == botcode.OP_JOIN:
-                    self.write("JOIN %s" % operation[1])
+                    if len(operation) == 2:
+                        self.write("JOIN %s :%s" % operation[1])
+                    elif len(operation) == 1:
+                        self.write("JOIN %s" % operation[1])
                 elif operation[0] == botcode.OP_MODE:
                     self.write("MODE %s" % operation[1])
                 elif operation[0] == botcode.OP_PRIVMSG:

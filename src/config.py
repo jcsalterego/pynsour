@@ -79,8 +79,8 @@ class Config:
             args = words[1:]
 
             if words[0] == botcode.OP_JOIN:
-                if len(args) > 0:
-                    ops += (botcode.OP_JOIN, args[0]),
+                if len(args) > 1:
+                    ops += (botcode.OP_JOIN, tuple(args)),
             elif words[0] == botcode.OP_MODE:
                 if len(args) > 0:
                     ops += (botcode.OP_MODE, args[0]),
