@@ -118,6 +118,9 @@ class Bot:
                     self.write("MODE %s" % operation[1])
                 elif operation[0] == botcode.OP_PRIVMSG:
                     self.write("PRIVMSG %s :%s" % operation[1:3])
+                elif operation[0] == botcode.OP_ERROR:
+                    self.logger.console("ERR\n"
+                                        "%s" % operation[1])
             self.ops = new_ops
 
         # self.ops will be empty by here
@@ -139,13 +142,11 @@ class Bot:
         sender, action, recipient = argv[:3]
 
         path = "%s/%s" % (self.name, recipient)
-
-        print self.asDict()
-        self.logger.console("F: %s %s" % (path, argv))
         
         for handler in self.handlers:
             re = handler['channel_re']
             if re.match(path):
+                # self.logger.console("F: %s %s" % (path, argv))
                 script_path = re.sub(handler['script'].replace("$", "\\"),
                                      path)
                 ops += (botcode.OP_EVENT_SCRIPT,
