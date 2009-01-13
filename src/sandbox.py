@@ -55,10 +55,19 @@ class Sandbox:
                 main = new.module('__main__')
                 main.__builtins__ = __builtin__
 
+                # add script path
+                sys_path = compile("import sys;"
+                                   "sys.path += \"%s\"," %
+                                   os.path.dirname(script_path),
+                                   '<string>', 'exec')
+                exec sys_path in main.__dict__
+
+                # save to runtime script cache
                 self.scripts[script_path] = { 'compiled': compiled,
                                               'main': main,
                                               'script': script,
                                               'st_mtime': st_mtime }
+
             else:
                 compiled = self.scripts[script_path]['compiled']
                 main = self.scripts[script_path]['main']
