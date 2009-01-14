@@ -53,12 +53,17 @@ class Sandbox:
 
                 # set up a main module
                 main = new.module('__main__')
-                main.__builtins__ = __builtin__
 
+                # perform deep copy of builtins
+                builtins = new.module('__builtin__')
+                for attr in dir(__builtin__):
+                    setattr(builtins, attr, getattr(__builtin__, attr))
+                main.__builtins__ = builtins
+                
                 # add script path
                 sys_path = compile("import sys;"
                                    "sys.path += \"%s\"," %
-                                   os.path.dirname(script_path),
+                                   os.path.realpath(os.path.dirname(script_path)),
                                    '<string>', 'exec')
                 exec sys_path in main.__dict__
 
@@ -73,27 +78,27 @@ class Sandbox:
                 main = self.scripts[script_path]['main']
 
             # add or update environment parameters
-            main.__dict__['sender'] = Sandbox.User(sender)
-            main.__dict__['recipient'] = recipient
+            main.__builtins__.sender = Sandbox.User(sender)
+            main.__builtins__.recipient = recipient
             if recipient[0] == '#':
-                main.__dict__['channel'] = recipient
+                main.__builtins__.channel = recipient
             else:
-                main.__dict__['channel'] = None
+                main.__builtins__.channel = None
 
-            main.__dict__['action'] = action
-            main.__dict__['msg'] = msg
-            main.__dict__['argv'] = [arg for arg in msg.split(" ") if arg]
+            main.__builtins__.action = action
+            main.__builtins__.msg = msg
+            main.__builtins__.argv = [arg for arg in msg.split(" ") if arg]
                 
             # shorthand parameters
-            main.__dict__['recp'] = recipient
+            main.__builtins__.recp = recipient
                 
             # irc module
-            main.__dict__['irc'] = Sandbox.Irc()
+            main.__builtins__.irc = Sandbox.Irc()
 
             # execute the code
             try:
                 exec compiled in main.__dict__
-                ops += main.__dict__['irc'].ops
+                ops += main.__builtins__.irc.ops
             except:
                 # script error
                 ops += (botcode.OP_ERROR, (traceback.format_exc())),
