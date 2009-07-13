@@ -4,7 +4,7 @@ import sys
 from src import *
 
 def main(argv):
-    pynsour = Pynsour('config/bot.yaml')
+    pynsour = Pynsour('./bot.yaml')
     return pynsour.run()
 
 if __name__ == "__main__":
