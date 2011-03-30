@@ -30,7 +30,10 @@ class Bot:
     def __load_defaults(self):
         """Loads default settings
         """
-        self.username = os.getlogin()
+		if os.name == "posix":
+		    self.username = os.getlogin()
+		else:
+			self.username = os.environ.get( "USERNAME" )
         self.password = None
         self.nicks = ["nick", "altnick"]
         self.realname = "Default pynsour user"
