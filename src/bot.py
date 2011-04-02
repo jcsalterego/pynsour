@@ -117,7 +117,7 @@ class Bot:
                     self.write("PONG :%s" % operation[1])
                 elif operation[0] == botcode.OP_JOIN:
                     if len(operation) == 2:
-                        self.write("JOIN %s :%s" % operation[1])
+                        self.write("JOIN %s %s" % operation[1])
                     elif len(operation) == 1:
                         self.write("JOIN %s" % operation[1])
                 elif operation[0] == botcode.OP_MODE:
